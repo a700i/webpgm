@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.38/browser.min.js"></script>
+    <style>
+        body {
+            font-size: 32px;
+            text-align: center;
+        }
+
+        span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div id="disp"></div>
+    </div>
+    <script type="text/babel">
+        // 1초마다 update 함수 실행
+        setInterval(update, 1000);
+
+        function update() {
+            // 현재 시간 가져오기
+            const now = new Date();
+            const hh = z2(now.getHours());
+            const mm = z2(now.getMinutes());
+            const ss = z2(now.getSeconds());
+            const binStr = hh + mm + ss;
+
+            // 스타일 정의
+            const style0 = { color: 'brown' };
+            const style1 = { color: 'red' };
+
+            const lines = [];
+            for (let i = 0; i < binStr.length; i++) {
+                const v = parseInt(binStr.charAt(i), 10);
+                const bin = ("0000" + v.toString(2)).slice(-4);
+
+                // 이진수 변환 및 JSX 요소 추가
+                for (let j = 0; j < bin.length; j++) {
+                    lines.push(
+                        <span key={i + '-' + j} style={bin[j] === '0' ? style0 : style1}>
+                            {bin[j] === '0' ? '○' : '●'}
+                        </span>
+                    );
+                }
+                lines.push(<br key={"br-" + i} />);
+            }
+
+            // ReactDOM을 사용하여 업데이트
+            ReactDOM.render(<div>{lines}</div>, document.getElementById('disp'));
+        }
+
+        function z2(v) {
+            return ("0" + v).slice(-2);
+        }
+    </script>
+</body>
+
+</html>
